@@ -1,0 +1,110 @@
+Exercise #1
+Using the benn.movie_awards table, figure out how many different types of awards are covered by this data. 
+SELECT distinct award_type
+FROM benn.movie_awards
+
+Exercise #2
+Figure out how many of each award has been given out. Take into account there are multiple rows per award and nomination.
+
+SELECT award_type, count(*) AS num_awards FROM
+      (SELECT DISTINCT film_name, award_type, category
+          FROM benn.movie_awards
+          WHERE winner = 'true') AS res1
+GROUP by award_type
+ORDER by num_awards desc
+
+Exercise #3
+ Consider the table with Apple's historical stock prices: 
+ tutorial.aapl_historical_stock_price. Write a query which lists 
+ the years that this data covers. Use SELECT DISTINCT so that years aren't repeated.
+    SELECT DISTINCT year
+FROM tutorial.aapl_historical_stock_price
+ORDER BY year;
+
+Exercise #4
+We can use SELEct DISTINCT to identify distinct unique combinations of data. 
+For example, what if we want to select each unique year, month combination from apple's stock price?
+    SELECT DISTINCT year, month 
+    FROM tutorial.aapl_historical_stock_price
+
+Exercise #5
+An estimate for the total amount of money which
+changed hands in a given day from stock sales can be found by multiplying
+the volume of shares sold times the closing price. Find the total amount
+of money which changed hands from Apple stock sales since 2008.
+
+    SELECT DISTINCT year, volume * close AS total
+    FROM tutorial.aapl_historical_stock_price
+    WHERE year > 2008
+    ORDER BY year;
+
+Exercise #6
+(Unguided) Back to the benn.movie_awards table, write a query which yields the count
+ of film stars which have won awards. An actor or actress should not be counted multiple times for winning multiple awards.
+        SELECT DISTINCT film_name, award_type
+        FROM benn.movie_awards;
+
+Exercise #7
+ Use the benn.college_football_players database to write a query that includes players'
+  names and a column that classifies them into four categories based on height 
+        SELECT player_name,
+        CASE WHEN height > 76
+        THEN 'giant'
+        WHEN height > 72
+        AND height <= 76
+        THEN 'tall'
+        WHEN height > 64
+        AND height <= 75
+        THEN 'normal'
+        ELSE 'chiquitin'
+        END AS "height_group" FROM benn.college_football_players;
+
+
+
+Exercise #8
+(Unguided) Use the benn.college_football_players database to write a 
+query that includes players' names and a column that classifies them into four categories based on weight:
+
+        SELECT player_name,
+        CASE WHEN weight > 235
+        THEN 'SuperHeavyweight'
+        WHEN weight > 220
+        AND weight <= 234
+        THEN 'Heavyweight'
+        WHEN weight > 198 
+        AND weight <= 220
+        THEN 'Middleweight'
+        ELSE 'Welterweight'
+        END AS "weight_group" FROM benn.college_football_players;
+
+Exercise #9
+Take a look at these two tables: 
+benn.college_football_players and benn.college_football_teams. 
+
+What if you wanted the player's data plus his team's division and 
+\conference in the same table? You need a join. Show player name, position, height, weight, division, conference.
+
+        SELECT plyrs.full_school_name, plyrs.player_name, plyrs.hometown, plyrs.state, teamz.division, teamz.conference 
+        FROM benn.college_football_players plyrs 
+        JOIN benn.college_football_teams teamz ON plyrs.school_name = teamz.school_name limit 450
+
+Exercise #10
+(Unguided) Consider the same two tables as above. For each college 
+football team, show the team name, division, and average height of all team members.
+
+        SELECT plyrs.player_name, plyrs.height, teamz.division, plyrs.school_name
+        FROM benn.college_football_players plyrs 
+        JOIN benn.college_football_teams teamz ON plyrs.school_name = teamz.school_name limit 450
+
+
+Exercise #11
+
+
+
+Exercise #12
+You were asked by your boss to produce a query which can help him visualize how company investments 
+change over time. Assume that the tutorial.crunchbase_investments_part1 and part2 tables are from different
+ time periods. Write a query that shows 4 columns. The first indicates which dataset (part 1 or 2)
+  the data comes from, the second is the company permalink, the third shows company status, and the fourth
+   is a sum of the amount of money invested into the company. Hint: you will have to use the
+    tutorial.crunchbase_companies table as well as the investments tables (tutorial.crunchbase_investments_part1 and part2).
